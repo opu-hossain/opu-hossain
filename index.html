@@ -421,16 +421,20 @@
 
     .stat-card {
       background: var(--bg0);
-      padding: 2rem 1.5rem;
+      padding: 1.75rem 1.25rem;
       text-align: center;
       transition: background 0.2s;
       position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.3rem;
     }
 
     .stat-card::after {
       content: '';
       position: absolute;
-      bottom: 0; left: 20%; right: 20%;
+      bottom: 0; left: 25%; right: 25%;
       height: 1px;
       background: var(--yellow);
       transform: scaleX(0);
@@ -440,21 +444,29 @@
     .stat-card:hover { background: var(--bg1); }
     .stat-card:hover::after { transform: scaleX(1); }
 
+    .stat-icon {
+      font-size: 0.8rem;
+      color: var(--orange);
+      opacity: 0.75;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.1rem;
+    }
+
     .stat-value {
       font-family: var(--font-display);
-      font-size: 2.8rem;
+      font-size: 1.8rem;
       font-weight: 800;
       color: var(--yellow);
       line-height: 1;
-      margin-bottom: 0.6rem;
       letter-spacing: -0.02em;
     }
 
     .stat-label {
       font-size: 0.65rem;
-      letter-spacing: 0.2em;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
-      color: var(--gray);
+      color: var(--fg3);
+      margin-top: 0.1rem;
     }
 
     /* two-column middle row */
@@ -909,18 +921,22 @@
 
     <div class="stats-cards reveal" id="stats-cards">
       <div class="stat-card">
+        <div class="stat-icon">{ }</div>
         <div class="stat-value" id="stat-repos">—</div>
         <div class="stat-label">Public Repos</div>
       </div>
       <div class="stat-card">
+        <div class="stat-icon">★</div>
         <div class="stat-value" id="stat-stars">—</div>
         <div class="stat-label">Total Stars</div>
       </div>
       <div class="stat-card">
+        <div class="stat-icon">↓</div>
         <div class="stat-value" id="stat-followers">—</div>
         <div class="stat-label">Followers</div>
       </div>
       <div class="stat-card">
+        <div class="stat-icon">↑</div>
         <div class="stat-value" id="stat-following">—</div>
         <div class="stat-label">Following</div>
       </div>
