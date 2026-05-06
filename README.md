@@ -91,8 +91,8 @@ Developer opu = {
 
 <div align="center">
 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-1d2021?style=for-the-badge&logo=linkedin&logoColor=458588)](https://linkedin.com/in/opuhossain)
-[![ORCID](https://img.shields.io/badge/ORCID-1d2021?style=for-the-badge&logo=orcid&logoColor=98971a)](https://orcid.org/0009-0006-3726-3412)
-[![Instagram](https://img.shields.io/badge/Instagram-1d2021?style=for-the-badge&logo=instagram&logoColor=b16286)](https://instagram.com/salmanhossain___)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-1d2021?style=for-the-badge&logoColor=458588)](https://linkedin.com/in/opuhossain)
+[![ORCID](https://img.shields.io/badge/ORCID-1d2021?style=for-the-badge&logoColor=98971a)](https://orcid.org/0009-0006-3726-3412)
+[![Instagram](https://img.shields.io/badge/Instagram-1d2021?style=for-the-badge&logoColor=b16286)](https://instagram.com/salmanhossain___)
 
 </div>
