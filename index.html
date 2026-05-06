@@ -408,127 +408,198 @@
     /* ── STATS ── */
     #stats { border-top: 1px solid var(--bg1); }
 
+    /* stat number cards */
     .stats-cards {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 1rem;
-      margin-bottom: 2rem;
+      gap: 1px;
+      background: var(--bg1);
+      border: 1px solid var(--bg1);
+      margin-bottom: 2.5rem;
+      overflow: hidden;
     }
 
     .stat-card {
       background: var(--bg0);
-      border: 1px solid var(--bg1);
-      padding: 1.5rem;
+      padding: 2rem 1.5rem;
       text-align: center;
-      transition: border-color 0.2s;
+      transition: background 0.2s;
+      position: relative;
     }
 
-    .stat-card:hover { border-color: var(--yellow); }
+    .stat-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 20%; right: 20%;
+      height: 1px;
+      background: var(--yellow);
+      transform: scaleX(0);
+      transition: transform 0.3s;
+    }
+
+    .stat-card:hover { background: var(--bg1); }
+    .stat-card:hover::after { transform: scaleX(1); }
 
     .stat-value {
       font-family: var(--font-display);
-      font-size: 2.2rem;
+      font-size: 2.8rem;
       font-weight: 800;
       color: var(--yellow);
       line-height: 1;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.6rem;
+      letter-spacing: -0.02em;
     }
 
     .stat-label {
-      font-size: 0.7rem;
-      letter-spacing: 0.15em;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
       text-transform: uppercase;
       color: var(--gray);
+    }
+
+    /* two-column middle row */
+    .stats-mid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
     }
 
     .langs-section {
       background: var(--bg0);
       border: 1px solid var(--bg1);
-      padding: 1.5rem;
-      margin-bottom: 2rem;
+      padding: 1.75rem;
     }
 
-    .langs-title {
-      font-size: 0.72rem;
-      letter-spacing: 0.18em;
+    .langs-title, .repos-list-title {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
       text-transform: uppercase;
       color: var(--orange);
-      margin-bottom: 1rem;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .langs-title::after, .repos-list-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--bg1);
     }
 
     .langs-bar {
-      height: 8px;
-      border-radius: 0;
+      height: 4px;
       display: flex;
       overflow: hidden;
-      margin-bottom: 1rem;
-      gap: 2px;
+      margin-bottom: 1.25rem;
+      gap: 3px;
     }
 
-    .langs-bar-seg {
-      height: 100%;
-      transition: flex 0.5s ease;
-    }
+    .langs-bar-seg { height: 100%; transition: flex 0.6s ease; }
 
     .langs-legend {
       display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
+      flex-direction: column;
+      gap: 0.6rem;
     }
 
     .lang-item {
       display: flex;
       align-items: center;
-      gap: 0.4rem;
+      justify-content: space-between;
       font-size: 0.75rem;
       color: var(--fg3);
     }
 
+    .lang-item-left {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
     .lang-dot {
-      width: 8px; height: 8px;
+      width: 6px; height: 6px;
       border-radius: 50%;
       flex-shrink: 0;
     }
 
-    .repos-list-title {
-      font-size: 0.72rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--orange);
-      margin-bottom: 1rem;
+    .lang-pct {
+      font-size: 0.7rem;
+      color: var(--gray);
+      font-variant-numeric: tabular-nums;
     }
 
-    .repo-row {
+    /* recent repos */
+    .repos-mini {
+      background: var(--bg0);
+      border: 1px solid var(--bg1);
+      padding: 1.75rem;
+    }
+
+    .repo-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      padding: 0.85rem 0;
+      border-bottom: 1px solid var(--bg1);
+      text-decoration: none;
+      transition: padding-left 0.2s;
+    }
+
+    .repo-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .repo-item:first-child { padding-top: 0; }
+    .repo-item:hover { padding-left: 0.4rem; }
+
+    .repo-item-top {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0.9rem 1rem;
-      background: var(--bg0);
-      border: 1px solid var(--bg1);
-      margin-bottom: 0.5rem;
-      text-decoration: none;
-      transition: border-color 0.2s;
     }
 
-    .repo-row:hover { border-color: var(--yellow); }
-
-    .repo-row-name {
-      font-size: 0.85rem;
-      color: var(--fg);
+    .repo-item-name {
+      font-size: 0.82rem;
       font-weight: 600;
+      color: var(--fg);
     }
 
-    .repo-row-meta {
-      display: flex;
-      gap: 1rem;
+    .repo-item-stars {
+      font-size: 0.72rem;
+      color: var(--yellow);
+      white-space: nowrap;
+    }
+
+    .repo-item-desc {
       font-size: 0.72rem;
       color: var(--gray);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 95%;
     }
 
-    .repo-row-star { color: var(--yellow); }
+    .repo-item-meta {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    .repo-item-lang {
+      font-size: 0.65rem;
+      color: var(--aqua);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .repo-item-date {
+      font-size: 0.65rem;
+      color: var(--bg3);
+    }
 
     @media (max-width: 768px) {
       .stats-cards { grid-template-columns: repeat(2, 1fr); }
+      .stats-mid   { grid-template-columns: 1fr; }
     }
 
     /* ── CONTACT ── */
@@ -855,15 +926,17 @@
       </div>
     </div>
 
-    <div class="langs-section reveal" style="transition-delay:0.15s;" id="langs-section">
-      <div class="langs-title">Top Languages</div>
-      <div class="langs-bar" id="langs-bar"></div>
-      <div class="langs-legend" id="langs-legend"></div>
-    </div>
+    <div class="stats-mid">
+      <div class="langs-section reveal" style="transition-delay:0.15s;" id="langs-section">
+        <div class="langs-title">Top Languages</div>
+        <div class="langs-bar" id="langs-bar"></div>
+        <div class="langs-legend" id="langs-legend"></div>
+      </div>
 
-    <div class="repos-list reveal" style="transition-delay:0.3s;" id="repos-list-section">
-      <div class="repos-list-title">Recent Repositories</div>
-      <div id="repos-list"></div>
+      <div class="repos-mini reveal" style="transition-delay:0.3s;" id="repos-list-section">
+        <div class="repos-list-title">Repositories</div>
+        <div id="repos-list"></div>
+      </div>
     </div>
 
   </section>
@@ -1005,7 +1078,12 @@
 
           const item = document.createElement('div');
           item.className = 'lang-item';
-          item.innerHTML = `<span class="lang-dot" style="background:${color}"></span>${lang} <span style="color:var(--gray)">${pct}%</span>`;
+          item.innerHTML = `
+            <div class="lang-item-left">
+              <span class="lang-dot" style="background:${color}"></span>
+              <span>${lang}</span>
+            </div>
+            <span class="lang-pct">${pct}%</span>`;
           legend.appendChild(item);
         });
 
@@ -1022,16 +1100,17 @@
           const row = document.createElement('a');
           row.href = r.html_url;
           row.target = '_blank';
-          row.className = 'repo-row';
+          row.className = 'repo-item';
+          const desc = r.description ? r.description.slice(0, 60) + (r.description.length > 60 ? '…' : '') : '';
           row.innerHTML = `
-            <div>
-              <div class="repo-row-name">${r.name}</div>
-              <div style="font-size:0.72rem;color:var(--gray);margin-top:0.2rem;">${r.description || ''}</div>
+            <div class="repo-item-top">
+              <span class="repo-item-name">${r.name}</span>
+              <span class="repo-item-stars">★ ${r.stargazers_count}</span>
             </div>
-            <div class="repo-row-meta">
-              ${r.language ? `<span>${r.language}</span>` : ''}
-              <span class="repo-row-star">★ ${r.stargazers_count}</span>
-              <span>${updated}</span>
+            ${desc ? `<div class="repo-item-desc">${desc}</div>` : ''}
+            <div class="repo-item-meta">
+              ${r.language ? `<span class="repo-item-lang">${r.language}</span>` : ''}
+              <span class="repo-item-date">${updated}</span>
             </div>`;
           list.appendChild(row);
         });
