@@ -205,28 +205,28 @@
       color: var(--yellow);
     }
 
-    /* Floating accent blobs */
+    /* Floating accent blobs — fixed so they span full page */
     .blob {
-      position: absolute;
+      position: fixed;
       border-radius: 50%;
-      filter: blur(80px);
+      filter: blur(130px);
       pointer-events: none;
-      opacity: 0.12;
+      opacity: 0.09;
       z-index: 0;
     }
 
     .blob-1 {
-      width: 500px; height: 500px;
+      width: 800px; height: 800px;
       background: var(--yellow);
-      top: -100px; right: -150px;
-      animation: drift 12s ease-in-out infinite alternate;
+      top: -250px; right: -250px;
+      animation: drift 14s ease-in-out infinite alternate;
     }
 
     .blob-2 {
-      width: 300px; height: 300px;
+      width: 600px; height: 600px;
       background: var(--blue);
-      bottom: 50px; left: -100px;
-      animation: drift 9s ease-in-out infinite alternate-reverse;
+      bottom: -200px; left: -200px;
+      animation: drift 10s ease-in-out infinite alternate-reverse;
     }
 
     @keyframes drift {
@@ -408,20 +408,127 @@
     /* ── STATS ── */
     #stats { border-top: 1px solid var(--bg1); }
 
-    .stats-grid {
+    .stats-cards {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.5rem;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 2rem;
     }
 
-    .stats-grid img {
-      width: 100%;
-      display: block;
+    .stat-card {
+      background: var(--bg0);
       border: 1px solid var(--bg1);
+      padding: 1.5rem;
+      text-align: center;
+      transition: border-color 0.2s;
     }
 
-    .stats-wide {
-      grid-column: 1 / -1;
+    .stat-card:hover { border-color: var(--yellow); }
+
+    .stat-value {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--yellow);
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gray);
+    }
+
+    .langs-section {
+      background: var(--bg0);
+      border: 1px solid var(--bg1);
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .langs-title {
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 1rem;
+    }
+
+    .langs-bar {
+      height: 8px;
+      border-radius: 0;
+      display: flex;
+      overflow: hidden;
+      margin-bottom: 1rem;
+      gap: 2px;
+    }
+
+    .langs-bar-seg {
+      height: 100%;
+      transition: flex 0.5s ease;
+    }
+
+    .langs-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .lang-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.75rem;
+      color: var(--fg3);
+    }
+
+    .lang-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .repos-list-title {
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 1rem;
+    }
+
+    .repo-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.9rem 1rem;
+      background: var(--bg0);
+      border: 1px solid var(--bg1);
+      margin-bottom: 0.5rem;
+      text-decoration: none;
+      transition: border-color 0.2s;
+    }
+
+    .repo-row:hover { border-color: var(--yellow); }
+
+    .repo-row-name {
+      font-size: 0.85rem;
+      color: var(--fg);
+      font-weight: 600;
+    }
+
+    .repo-row-meta {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.72rem;
+      color: var(--gray);
+    }
+
+    .repo-row-star { color: var(--yellow); }
+
+    @media (max-width: 768px) {
+      .stats-cards { grid-template-columns: repeat(2, 1fr); }
     }
 
     /* ── CONTACT ── */
@@ -531,11 +638,57 @@
     ::-webkit-scrollbar-thumb { background: var(--bg2); }
     ::-webkit-scrollbar-thumb:hover { background: var(--yellow); }
 
+    /* ── HAMBURGER ── */
+    .nav-toggle {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+      background: none;
+      border: none;
+    }
+
+    .nav-toggle span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--fg);
+      transition: all 0.3s;
+    }
+
+    .nav-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-toggle.open span:nth-child(2) { opacity: 0; }
+    .nav-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
     /* ── RESPONSIVE ── */
     @media (max-width: 768px) {
       nav { padding: 1rem 1.5rem; }
-      nav ul { gap: 1.2rem; }
-      nav ul a { font-size: 0.7rem; }
+
+      .nav-toggle { display: flex; }
+
+      nav ul {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0; right: 0;
+        flex-direction: column;
+        gap: 0;
+        background: rgba(29,32,33,0.97);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--bg1);
+        padding: 1rem 0;
+      }
+
+      nav ul.open { display: flex; }
+      nav ul li { width: 100%; }
+      nav ul a {
+        display: block;
+        padding: 0.75rem 1.5rem;
+        font-size: 0.8rem;
+        letter-spacing: 0.15em;
+      }
+
       #hero { padding: 6rem 1.5rem 3rem; }
       section { padding: 4rem 1.5rem; }
       .stats-grid { grid-template-columns: 1fr; }
@@ -550,7 +703,10 @@
   <!-- NAV -->
   <nav>
     <div class="nav-logo">opu<span>.</span>dev</div>
-    <ul>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+    <ul id="nav-menu">
       <li><a href="#hero">Home</a></li>
       <li><a href="#projects">Projects</a></li>
       <li><a href="#skills">Skills</a></li>
@@ -680,31 +836,36 @@
     <div class="section-label">// activity</div>
     <h2 class="section-title">GitHub <span>Stats</span></h2>
 
-    <div class="stats-grid">
-      <img
-        src="https://github-readme-stats.vercel.app/api?username=opu-hossain&show_icons=true&hide_border=true&bg_color=1d2021&title_color=d79921&icon_color=d65d0e&text_color=ebdbb2&ring_color=d79921"
-        alt="GitHub Stats"
-        class="reveal"
-      />
-      <img
-        src="https://github-readme-stats.vercel.app/api/top-langs/?username=opu-hossain&layout=compact&hide_border=true&bg_color=1d2021&title_color=d79921&text_color=ebdbb2"
-        alt="Top Languages"
-        class="reveal"
-        style="transition-delay: 0.1s;"
-      />
-      <img
-        class="stats-wide reveal"
-        src="https://github-readme-streak-stats.herokuapp.com/?user=opu-hossain&hide_border=true&background=1d2021&ring=d79921&fire=d65d0e&currStreakLabel=d79921&sideLabels=ebdbb2&dates=928374&stroke=3c3836"
-        alt="Streak Stats"
-        style="transition-delay: 0.2s;"
-      />
-      <img
-        class="stats-wide reveal"
-        src="https://github-readme-activity-graph.vercel.app/graph?username=opu-hossain&bg_color=1d2021&color=d79921&line=d65d0e&point=ebdbb2&area=true&area_color=d7992130&hide_border=true"
-        alt="Activity Graph"
-        style="transition-delay: 0.3s;"
-      />
+    <div class="stats-cards reveal" id="stats-cards">
+      <div class="stat-card">
+        <div class="stat-value" id="stat-repos">—</div>
+        <div class="stat-label">Public Repos</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="stat-stars">—</div>
+        <div class="stat-label">Total Stars</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="stat-followers">—</div>
+        <div class="stat-label">Followers</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="stat-following">—</div>
+        <div class="stat-label">Following</div>
+      </div>
     </div>
+
+    <div class="langs-section reveal" style="transition-delay:0.15s;" id="langs-section">
+      <div class="langs-title">Top Languages</div>
+      <div class="langs-bar" id="langs-bar"></div>
+      <div class="langs-legend" id="langs-legend"></div>
+    </div>
+
+    <div class="repos-list reveal" style="transition-delay:0.3s;" id="repos-list-section">
+      <div class="repos-list-title">Recent Repositories</div>
+      <div id="repos-list"></div>
+    </div>
+
   </section>
 
   <!-- CONTACT -->
@@ -762,31 +923,126 @@
   </footer>
 
   <script>
-    // Scroll reveal
+    // ── Hamburger ──
+    const toggle = document.getElementById('nav-toggle');
+    const menu   = document.getElementById('nav-menu');
+    toggle.addEventListener('click', () => {
+      toggle.classList.toggle('open');
+      menu.classList.toggle('open');
+    });
+    menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+      toggle.classList.remove('open');
+      menu.classList.remove('open');
+    }));
+
+    // ── Scroll reveal ──
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(e => {
-        if (e.isIntersecting) {
-          e.target.classList.add('visible');
-          observer.unobserve(e.target);
-        }
+        if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
       });
     }, { threshold: 0.1 });
-
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-    // Active nav link
+    // ── Active nav link ──
     const sections = document.querySelectorAll('section[id]');
     const navLinks = document.querySelectorAll('nav ul a');
-
     window.addEventListener('scroll', () => {
+      const atBottom = window.innerHeight + window.scrollY >= document.body.scrollHeight - 10;
       let current = '';
-      sections.forEach(s => {
-        if (window.scrollY >= s.offsetTop - 120) current = s.id;
-      });
+      if (atBottom) {
+        current = sections[sections.length - 1].id;
+      } else {
+        sections.forEach(s => { if (window.scrollY >= s.offsetTop - 120) current = s.id; });
+      }
       navLinks.forEach(a => {
         a.style.color = a.getAttribute('href') === `#${current}` ? 'var(--yellow)' : '';
       });
     });
+
+    // ── GitHub API Stats ──
+    const USERNAME = 'opu-hossain';
+    const LANG_COLORS = {
+      Python: '#3572A5', JavaScript: '#f1e05a', Shell: '#89e051',
+      HTML: '#e34c26', CSS: '#563d7c', C: '#555555', Kotlin: '#A97BFF',
+      TypeScript: '#2b7489', Ruby: '#701516', Go: '#00ADD8',
+    };
+
+    async function fetchStats() {
+      try {
+        const [userRes, reposRes] = await Promise.all([
+          fetch(`https://api.github.com/users/${USERNAME}`),
+          fetch(`https://api.github.com/users/${USERNAME}/repos?per_page=100&sort=updated`)
+        ]);
+        const user  = await userRes.json();
+        const repos = await reposRes.json();
+
+        // Profile numbers
+        document.getElementById('stat-repos').textContent     = user.public_repos ?? '—';
+        document.getElementById('stat-followers').textContent = user.followers    ?? '—';
+        document.getElementById('stat-following').textContent = user.following    ?? '—';
+
+        // Stars
+        const totalStars = repos.reduce((s, r) => s + (r.stargazers_count || 0), 0);
+        document.getElementById('stat-stars').textContent = totalStars;
+
+        // Language distribution
+        const langTotals = {};
+        repos.forEach(r => { if (r.language) langTotals[r.language] = (langTotals[r.language] || 0) + 1; });
+        const sorted = Object.entries(langTotals).sort((a,b) => b[1]-a[1]).slice(0, 6);
+        const total  = sorted.reduce((s,[,v]) => s+v, 0);
+
+        const bar    = document.getElementById('langs-bar');
+        const legend = document.getElementById('langs-legend');
+        bar.innerHTML = ''; legend.innerHTML = '';
+
+        sorted.forEach(([lang, count]) => {
+          const pct   = (count / total * 100).toFixed(1);
+          const color = LANG_COLORS[lang] || '#928374';
+          const seg   = document.createElement('div');
+          seg.className = 'langs-bar-seg';
+          seg.style.cssText = `flex:${pct};background:${color};`;
+          bar.appendChild(seg);
+
+          const item = document.createElement('div');
+          item.className = 'lang-item';
+          item.innerHTML = `<span class="lang-dot" style="background:${color}"></span>${lang} <span style="color:var(--gray)">${pct}%</span>`;
+          legend.appendChild(item);
+        });
+
+        // Recent repos (non-fork, sorted by stars then updated)
+        const notable = repos
+          .filter(r => !r.fork)
+          .sort((a,b) => (b.stargazers_count - a.stargazers_count) || (new Date(b.updated_at) - new Date(a.updated_at)))
+          .slice(0, 5);
+
+        const list = document.getElementById('repos-list');
+        list.innerHTML = '';
+        notable.forEach(r => {
+          const updated = new Date(r.updated_at).toLocaleDateString('en-US', {month:'short', year:'numeric'});
+          const row = document.createElement('a');
+          row.href = r.html_url;
+          row.target = '_blank';
+          row.className = 'repo-row';
+          row.innerHTML = `
+            <div>
+              <div class="repo-row-name">${r.name}</div>
+              <div style="font-size:0.72rem;color:var(--gray);margin-top:0.2rem;">${r.description || ''}</div>
+            </div>
+            <div class="repo-row-meta">
+              ${r.language ? `<span>${r.language}</span>` : ''}
+              <span class="repo-row-star">★ ${r.stargazers_count}</span>
+              <span>${updated}</span>
+            </div>`;
+          list.appendChild(row);
+        });
+
+      } catch(e) {
+        document.getElementById('stats-cards').innerHTML =
+          '<p style="color:var(--gray);font-size:0.8rem;">Could not load stats — check connection.</p>';
+      }
+    }
+
+    fetchStats();
   </script>
 
 </body>
