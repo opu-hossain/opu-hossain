@@ -1,7 +1,7 @@
 <div align="center">
 
 <!-- Typing SVG -->
-[![Typing SVG](https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=600&size=28&pause=1000&color=D79921&background=1D202100&center=true&vCenter=true&width=600&lines=Hi%2C+I'm+Opu+Hossain+%3A%29;CSE+Undergraduate;Systems+%7C+Web+%7C+Mobile;The+best+way+to+learn+is+to+do+it.)](https://git.io/typing-svg)
+[![Typing SVG](https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=600&size=28&pause=1000&color=D79921&background=1D202100&center=true&vCenter=true&width=600&lines=Hi%2C+I'm+Opu+Hossain+%3A%29;CSE+Undergraduate;Systems+%7C+Mobile;The+best+way+to+learn+is+to+do+it.)](https://git.io/typing-svg)
 
 <br/>
 
@@ -65,9 +65,9 @@ Developer opu = {
 
 <div align="center">
 
-<img src="https://github-readme-stats.vercel.app/api?username=opu-hossain&show_icons=true&theme=gruvbox&hide_border=true&bg_color=1d2021&title_color=d79921&icon_color=d65d0e&text_color=ebdbb2&ring_color=d79921" height="165"/>
+<img src="https://github-readme-stats-fast.vercel.app/api?username=opu-hossain&show_icons=true&theme=gruvbox&hide_border=true&bg_color=1d2021&title_color=d79921&icon_color=d65d0e&text_color=ebdbb2&ring_color=d79921" height="165"/>
 &nbsp;&nbsp;
-<img src="https://github-readme-stats.vercel.app/api/top-langs/?username=opu-hossain&layout=compact&theme=gruvbox&hide_border=true&bg_color=1d2021&title_color=d79921&text_color=ebdbb2" height="165"/>
+<img src="https://github-readme-stats-fast.vercel.app/api/top-langs/?username=opu-hossain&layout=compact&theme=gruvbox&hide_border=true&bg_color=1d2021&title_color=d79921&text_color=ebdbb2" height="165"/>
 
 </div>
 
@@ -91,8 +91,8 @@ Developer opu = {
 
 <div align="center">
 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-1d2021?style=for-the-badge&logoColor=458588)](https://linkedin.com/in/opuhossain)
-[![ORCID](https://img.shields.io/badge/ORCID-1d2021?style=for-the-badge&logoColor=98971a)](https://orcid.org/0009-0006-3726-3412)
-[![Instagram](https://img.shields.io/badge/Instagram-1d2021?style=for-the-badge&logoColor=b16286)](https://instagram.com/salmanhossain___)
+[LinkedIn](https://linkedin.com/in/opuhossain)
+[ORCID](https://orcid.org/0009-0006-3726-3412)
+[Instagram](https://instagram.com/salmanhossain___)
 
 </div>
