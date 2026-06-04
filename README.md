@@ -60,6 +60,12 @@ Developer opu = {
 | [**TruthByte**](https://github.com/opu-hossain/truthbyte) | CLI file integrity checker with multi-algorithm hash verification | Bash · Linux |
 
 ---
+### Learning Roadmap
+
+<div align="center">
+[![roadmap.sh](https://roadmap.sh/card/tall/6a19281111fa913c06d36d2a?variant=dark)](https://roadmap.sh)
+</div>
+
 
 ### 📊 GitHub Stats
 
