@@ -56,7 +56,7 @@ Developer opu = {
 
 | Project | Description | Stack |
 |--------|-------------|-------|
-| [**HammerSports**](https://github.com/opu-hossain/HammerSports) | Open-source sports blog — auth, rich text, Mailchimp integration | Python · Django · Tailwind |
+| [**LogBook**](https://github.com/opu-hossain/logbook) | Open-source blog — auth, rich text | Python · Django · Tailwind |
 | [**TruthByte**](https://github.com/opu-hossain/truthbyte) | CLI file integrity checker with multi-algorithm hash verification | Bash · Linux |
 
 ---
