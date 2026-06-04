@@ -12,7 +12,7 @@
 
 ---
 
-### 🧑‍💻 About Me
+### About Me
 
 ```c
 typedef struct {
@@ -35,7 +35,7 @@ Developer opu = {
 
 ---
 
-### 🛠️ Tech Stack
+### Tech Stack
 
 <div align="center">
 
@@ -52,7 +52,7 @@ Developer opu = {
 
 ---
 
-### 📌 Featured Projects
+### Featured Projects
 
 | Project | Description | Stack |
 |--------|-------------|-------|
@@ -63,11 +63,13 @@ Developer opu = {
 ### Learning Roadmap
 
 <div align="center">
-[![roadmap.sh](https://roadmap.sh/card/tall/6a19281111fa913c06d36d2a?variant=dark)](https://roadmap.sh)
+  <a href="https://roadmap.sh">
+    <img src="https://roadmap.sh/card/tall/6a19281111fa913c06d36d2a?variant=dark" alt="roadmap.sh card"/>
+  </a>
 </div>
 
 
-### 📊 GitHub Stats
+### GitHub Stats
 
 <div align="center">
 
@@ -85,7 +87,7 @@ Developer opu = {
 
 ---
 
-### 📈 Activity Graph
+### Activity Graph
 
 <div align="center">
 
