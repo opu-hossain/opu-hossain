@@ -62,7 +62,10 @@ Developer opu = {
 ---
 ### Learning Roadmap
 
+<!-- Gruvbox dark bg header -->
 <div align="center">
+  <img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&size=16&pause=1000&color=D79921&background=1D202100&center=true&vCenter=true&width=435&lines=Learning+Roadmap" alt="Learning Roadmap" />
+  <br/>
   <a href="https://roadmap.sh">
     <img src="https://roadmap.sh/card/tall/6a19281111fa913c06d36d2a?variant=dark" alt="roadmap.sh card"/>
   </a>
