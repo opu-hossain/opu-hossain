@@ -3,123 +3,140 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>archy — zsh &amp; tmux reference</title>
+<title>archy — terminal &amp; tmux reference</title>
 <style>
   :root{
     --bg:#1d2021;
     --bg-soft:#282828;
     --bg-card:#242423;
+    --bg-side:#1b1c1d;
     --border:#3c3836;
+    --border-soft:#32302f;
     --fg:#ebdbb2;
-    --muted:#928374;
+    --muted:#a89984;
     --dim:#665c54;
     --yellow:#d79921;
     --yellow-bright:#fabd2f;
     --green:#b8bb26;
     --aqua:#8ec07c;
     --blue:#458588;
+    --blue-bright:#83a598;
     --red:#fb4934;
     --purple:#d3869b;
+    --orange:#fe8019;
     --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);font-family:var(--mono);}
   @media (prefers-reduced-motion: reduce){ *{animation:none !important; transition:none !important;} }
+  ::selection{background:var(--blue);color:var(--bg);}
+  ::-webkit-scrollbar{width:10px;height:10px;}
+  ::-webkit-scrollbar-track{background:var(--bg);}
+  ::-webkit-scrollbar-thumb{background:var(--border);border-radius:5px;}
+  ::-webkit-scrollbar-thumb:hover{background:var(--dim);}
 
   /* ── top bar mimicking a kitty window ───────────── */
   .titlebar{
     display:flex;align-items:center;gap:8px;
-    padding:10px 16px;background:var(--bg-soft);border-bottom:1px solid var(--border);
-    position:sticky;top:0;z-index:10;
+    padding:11px 18px;background:var(--bg-soft);border-bottom:1px solid var(--border);
+    position:sticky;top:0;z-index:20;
   }
   .dot{width:11px;height:11px;border-radius:50%;}
   .dot.r{background:var(--red);} .dot.y{background:var(--yellow);} .dot.g{background:var(--green);}
   .titlebar .path{margin-left:12px;color:var(--muted);font-size:13px;}
-  .titlebar .path b{color:var(--blue);}
+  .titlebar .path b{color:var(--blue-bright);}
   .titlebar .host{margin-left:auto;color:var(--dim);font-size:12px;}
 
-  .wrap{max-width:900px;margin:0 auto;padding:28px 20px 80px;}
+  .layout{max-width:1180px;margin:0 auto;display:flex;gap:0;align-items:flex-start;}
 
-  header h1{
-    font-size:20px;margin:0 0 4px;color:var(--fg);font-weight:600;
+  /* ── sidebar ───────────────────────────────────────── */
+  .sidebar{
+    width:210px;flex-shrink:0;position:sticky;top:52px;
+    max-height:calc(100vh - 52px);overflow-y:auto;
+    padding:24px 10px 40px 20px;border-right:1px solid var(--border);
   }
+  .sidebar .side-title{color:var(--dim);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;margin:18px 0 8px;}
+  .sidebar .side-title:first-child{margin-top:0;}
+  .sidebar a{
+    display:block;color:var(--muted);text-decoration:none;font-size:12.5px;
+    padding:4px 8px;border-radius:3px;margin-bottom:1px;border-left:2px solid transparent;
+  }
+  .sidebar a:hover{color:var(--fg);background:var(--bg-card);}
+  .sidebar a.active{color:var(--yellow-bright);border-left-color:var(--yellow-bright);background:var(--bg-card);}
+
+  .main{flex:1;min-width:0;padding:28px 28px 100px;}
+
+  header h1{font-size:21px;margin:0 0 4px;color:var(--fg);font-weight:600;}
   header h1 .prompt{color:var(--green);}
-  header p.sub{color:var(--muted);margin:0 0 24px;font-size:13.5px;}
+  header p.sub{color:var(--muted);margin:0 0 22px;font-size:13.5px;}
 
   /* ── fzf-style search bar ─────────────────────────── */
-  .fzf-box{
-    border:2px solid var(--border);
-    border-radius:2px;
-    background:var(--bg-soft);
-    overflow:hidden;
-    margin-bottom:22px;
-  }
-  .fzf-input-row{
-    display:flex;align-items:center;gap:8px;
-    padding:10px 12px;border-bottom:1px solid var(--border);
-  }
+  .fzf-box{border:2px solid var(--border);border-radius:3px;background:var(--bg-soft);overflow:hidden;margin-bottom:18px;}
+  .fzf-input-row{display:flex;align-items:center;gap:8px;padding:11px 14px;border-bottom:1px solid var(--border);}
   .fzf-input-row .arrow{color:var(--red);font-weight:bold;}
-  .fzf-input-row input{
-    flex:1;background:transparent;border:none;outline:none;
-    color:var(--fg);font-family:var(--mono);font-size:15px;
-  }
+  .fzf-input-row input{flex:1;background:transparent;border:none;outline:none;color:var(--fg);font-family:var(--mono);font-size:15px;}
   .fzf-input-row input::placeholder{color:var(--dim);}
-  .fzf-meta{
-    display:flex;justify-content:space-between;
-    padding:5px 12px;font-size:11.5px;color:var(--yellow-bright);
-    background:var(--bg-soft);
-  }
+  .fzf-meta{display:flex;justify-content:space-between;padding:6px 14px;font-size:11.5px;color:var(--yellow-bright);background:var(--bg-soft);}
   .fzf-meta span.count b{color:var(--aqua);}
 
   /* ── tabs ──────────────────────────────────────────── */
-  .tabs{display:flex;gap:6px;margin-bottom:18px;flex-wrap:wrap;}
-  .tab{
-    padding:6px 14px;border:1px solid var(--border);border-radius:2px;
-    background:var(--bg-soft);color:var(--muted);cursor:pointer;
-    font-family:var(--mono);font-size:13px;user-select:none;
-  }
+  .tabs{display:flex;gap:6px;margin-bottom:22px;flex-wrap:wrap;}
+  .tab{padding:7px 16px;border:1px solid var(--border);border-radius:3px;background:var(--bg-soft);color:var(--muted);cursor:pointer;font-family:var(--mono);font-size:13px;user-select:none;transition:border-color .12s;}
   .tab:hover{color:var(--fg);border-color:var(--dim);}
   .tab.active{color:var(--bg);background:var(--yellow-bright);border-color:var(--yellow-bright);font-weight:600;}
 
   /* ── section headers ──────────────────────────────── */
+  .app-header{
+    display:flex;align-items:center;gap:10px;margin:34px 0 14px;
+  }
+  .app-header:first-of-type{margin-top:6px;}
+  .app-header .app-icon{font-size:15px;}
+  .app-header h2{font-size:15px;margin:0;color:var(--yellow-bright);text-transform:uppercase;letter-spacing:.05em;}
+  .app-header .line{flex:1;height:1px;background:var(--border);}
+
   .section-label{
-    color:var(--dim);font-size:11px;letter-spacing:.08em;text-transform:uppercase;
-    margin:26px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--border);
+    color:var(--blue-bright);font-size:11.5px;font-weight:600;letter-spacing:.03em;
+    margin:22px 0 8px;padding-bottom:5px;border-bottom:1px solid var(--border-soft);
+    scroll-margin-top:60px;
   }
 
   /* ── command cards ─────────────────────────────────── */
-  .grid{display:flex;flex-direction:column;gap:6px;}
+  .grid{display:flex;flex-direction:column;gap:5px;}
   .card{
-    display:grid;grid-template-columns:150px 1fr auto;gap:14px;align-items:center;
-    padding:10px 14px;background:var(--bg-card);border:1px solid var(--border);border-radius:3px;
+    display:grid;grid-template-columns:190px 1fr;gap:16px;align-items:start;
+    padding:9px 14px;background:var(--bg-card);border:1px solid var(--border-soft);border-radius:3px;
+    transition:border-color .12s, background .12s;
   }
+  .card:hover{border-color:var(--dim);background:#282624;}
   .card .key{
-    font-family:var(--mono);font-size:13px;color:var(--bg);
+    font-family:var(--mono);font-size:12.5px;color:var(--bg);
     background:var(--green);padding:3px 8px;border-radius:2px;
     white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600;
-    justify-self:start;
+    justify-self:start;margin-top:1px;
   }
-  .card .key.alt{background:var(--purple);}
-  .card .key.blue{background:var(--blue);color:var(--fg);}
-  .card .desc{color:var(--fg);font-size:13.5px;line-height:1.4;}
+  .card .key.blue{background:var(--blue-bright);color:var(--bg);}
+  .card .key.purple{background:var(--purple);color:var(--bg);}
+  .card .key.orange{background:var(--orange);color:var(--bg);}
+  .card .key.aqua{background:var(--aqua);color:var(--bg);}
+  .card .key.red{background:var(--red);color:var(--bg);}
+  .card .key.yellow{background:var(--yellow-bright);color:var(--bg);}
+  .card .desc{color:var(--fg);font-size:13.2px;line-height:1.45;}
   .card .desc .hl{color:var(--yellow-bright);}
-  .card .tag{
-    font-size:10.5px;color:var(--dim);border:1px solid var(--border);
-    padding:2px 7px;border-radius:10px;white-space:nowrap;
-  }
-  .empty{color:var(--muted);text-align:center;padding:50px 0;font-size:14px;}
+  .card .desc code{background:var(--bg-side);padding:1px 5px;border-radius:2px;color:var(--aqua);font-size:12.3px;}
+
+  .empty{color:var(--muted);text-align:center;padding:60px 0;font-size:14px;}
   .empty .arrow{color:var(--red);}
 
-  footer{
-    margin-top:50px;padding-top:16px;border-top:1px solid var(--border);
-    color:var(--dim);font-size:11.5px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;
-  }
-  footer a{color:var(--blue);text-decoration:none;}
+  footer{margin-top:50px;padding-top:16px;border-top:1px solid var(--border);color:var(--dim);font-size:11.5px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+  footer a{color:var(--blue-bright);text-decoration:none;}
   footer a:hover{text-decoration:underline;color:var(--aqua);}
 
+  @media (max-width:900px){
+    .sidebar{display:none;}
+    .main{padding:20px 16px 80px;}
+  }
   @media (max-width:640px){
     .card{grid-template-columns:1fr;gap:6px;}
-    .card .tag{justify-self:start;}
   }
 </style>
 </head>
@@ -128,110 +145,242 @@
 <div class="titlebar">
   <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
   <span class="path">archy <b>~/reference</b></span>
-  <span class="host">zsh · tmux</span>
+  <span class="host">tmux · shell</span>
 </div>
 
-<div class="wrap">
-  <header>
-    <h1><span class="prompt">❯</span> command reference</h1>
-    <p class="sub">Every alias, keybind, and option from your .zshrc and .tmux.conf, in one searchable place.</p>
-  </header>
+<div class="layout">
+  <nav class="sidebar" id="sidebar"></nav>
 
-  <div class="fzf-box">
-    <div class="fzf-input-row">
-      <span class="arrow">&gt;</span>
-      <input id="search" type="text" placeholder="fuzzy search commands, keys, or descriptions…" autocomplete="off" />
+  <div class="main">
+    <header>
+      <h1><span class="prompt">❯</span> terminal &amp; tmux reference</h1>
+      <p class="sub">The full command set for tmux and everyday shell work — not just what's bound in your dotfiles.</p>
+    </header>
+
+    <div class="fzf-box">
+      <div class="fzf-input-row">
+        <span class="arrow">&gt;</span>
+        <input id="search" type="text" placeholder="fuzzy search commands, flags, or descriptions…" autocomplete="off" />
+      </div>
+      <div class="fzf-meta">
+        <span class="count"><b id="resultCount">0</b>/<span id="totalCount">0</span></span>
+        <span>gruvbox-hard</span>
+      </div>
     </div>
-    <div class="fzf-meta">
-      <span class="count"><b id="resultCount">0</b>/<span id="totalCount">0</span></span>
-      <span>gruvbox-hard</span>
+
+    <div class="tabs" id="tabs">
+      <div class="tab active" data-tab="all">all</div>
+      <div class="tab" data-tab="tmux">tmux</div>
+      <div class="tab" data-tab="shell">shell</div>
     </div>
+
+    <div id="results"></div>
+
+    <footer>
+      <span>a living reference — add to it as you learn more</span>
+      <a href="https://github.com/opu-hossain" target="_blank" rel="noopener">github.com/opu-hossain</a>
+    </footer>
   </div>
-
-  <div class="tabs" id="tabs">
-    <div class="tab active" data-tab="all">all</div>
-    <div class="tab" data-tab="zsh">zsh</div>
-    <div class="tab" data-tab="tmux">tmux</div>
-  </div>
-
-  <div id="results"></div>
-
-  <footer>
-    <span>source: .zshrc + .tmux.conf, annotated by hand</span>
-    <a href="https://github.com/opu-hossain" target="_blank" rel="noopener">github.com/opu-hossain</a>
-  </footer>
 </div>
 
 <script>
 const DATA = [
-  // ── ZSH: history ─────────────────────────────
-  {app:'zsh', group:'History', key:'ctrl+r', keyClass:'blue', desc:'Fuzzy-search command history (via fzf key-bindings).'},
-  {app:'zsh', group:'History', key:'!!', keyClass:'', desc:'Re-run the last command (standard zsh history expansion).'},
-  {app:'zsh', group:'History', key:'HIST_IGNORE_ALL_DUPS', keyClass:'', desc:'Removes the older copy whenever a duplicate command is re-run, keeping history unique.'},
-  {app:'zsh', group:'History', key:'SHARE_HISTORY', keyClass:'', desc:'All open shells write to and read from the same history file live.'},
-  {app:'zsh', group:'History', key:'HIST_IGNORE_SPACE', keyClass:'', desc:'Prefix a command with a space to keep it out of history entirely.'},
+// ═══════════════════════════════════════════════════════════════
+// TMUX — sessions
+// ═══════════════════════════════════════════════════════════════
+{app:'tmux', group:'Sessions', key:'tmux', keyClass:'blue', desc:'Start a new, unnamed tmux session.'},
+{app:'tmux', group:'Sessions', key:'tmux new -s name', keyClass:'blue', desc:'Start a new session with a given <span class="hl">name</span>.'},
+{app:'tmux', group:'Sessions', key:'tmux ls', keyClass:'blue', desc:'List all running sessions.'},
+{app:'tmux', group:'Sessions', key:'tmux attach -t name', keyClass:'blue', desc:'Attach (reconnect) to an existing session by name.'},
+{app:'tmux', group:'Sessions', key:'tmux kill-session -t name', keyClass:'blue', desc:'Terminate a specific session.'},
+{app:'tmux', group:'Sessions', key:'tmux kill-server', keyClass:'blue', desc:'Kill the tmux server and every session running under it.'},
+{app:'tmux', group:'Sessions', key:'prefix d', keyClass:'blue', desc:'Detach from the current session, leaving it running in the background.'},
+{app:'tmux', group:'Sessions', key:'prefix $', keyClass:'blue', desc:'Rename the current session.'},
+{app:'tmux', group:'Sessions', key:'prefix s', keyClass:'blue', desc:'Open an interactive list to switch between sessions (default binding — you\'ve remapped <code>s</code> to split, use <code>tmux ls</code> instead).'},
+{app:'tmux', group:'Sessions', key:'prefix (  /  )', keyClass:'blue', desc:'Switch to the previous / next session.'},
 
-  // ── ZSH: vim mode ────────────────────────────
-  {app:'zsh', group:'Vim keybindings', key:'Esc', keyClass:'green', desc:'Drop from insert into <span class="hl">normal mode</span> on the command line. Red [N] appears in the prompt.'},
-  {app:'zsh', group:'Vim keybindings', key:'v', keyClass:'green', desc:'In normal mode: open the current command line in Neovim to edit, then run it.'},
-  {app:'zsh', group:'Vim keybindings', key:'ctrl+p / ctrl+n', keyClass:'green', desc:'Step backward / forward through history (emacs-style, works in insert mode).'},
-  {app:'zsh', group:'Vim keybindings', key:'ctrl+a / ctrl+e', keyClass:'green', desc:'Jump to start / end of the line.'},
-  {app:'zsh', group:'Vim keybindings', key:'ctrl+w', keyClass:'green', desc:'Delete the previous word.'},
+// TMUX — windows
+{app:'tmux', group:'Windows', key:'prefix c', keyClass:'green', desc:'Create a new window.'},
+{app:'tmux', group:'Windows', key:'prefix ,', keyClass:'green', desc:'Rename the current window.'},
+{app:'tmux', group:'Windows', key:'prefix &', keyClass:'green', desc:'Close (kill) the current window, with confirmation.'},
+{app:'tmux', group:'Windows', key:'prefix n  /  p', keyClass:'green', desc:'Move to the next / previous window.'},
+{app:'tmux', group:'Windows', key:'prefix 0-9', keyClass:'green', desc:'Jump to window by number (you\'ve bound 1–5 explicitly).'},
+{app:'tmux', group:'Windows', key:'prefix w', keyClass:'green', desc:'Open an interactive window list to choose from.'},
+{app:'tmux', group:'Windows', key:'prefix .', keyClass:'green', desc:'Move the current window to a different index.'},
+{app:'tmux', group:'Windows', key:'prefix f', keyClass:'green', desc:'Search across windows for one containing specific text.'},
 
-  // ── ZSH: completion ──────────────────────────
-  {app:'zsh', group:'Tab completion', key:'Tab', keyClass:'aqua', desc:'Open the arrow-key selectable completion menu.'},
-  {app:'zsh', group:'Tab completion', key:'shift+Tab', keyClass:'aqua', desc:'Move backward through the completion menu.'},
-  {app:'zsh', group:'Tab completion', key:'ctrl+t', keyClass:'aqua', desc:'fzf: fuzzy-find a file and insert its path at the cursor.'},
-  {app:'zsh', group:'Tab completion', key:'alt+c', keyClass:'aqua', desc:'fzf: fuzzy-find a directory and cd into it.'},
-  {app:'zsh', group:'Tab completion', key:'ctrl+r', keyClass:'aqua', desc:'fzf: fuzzy-search through shell history.'},
+// TMUX — panes
+{app:'tmux', group:'Panes', key:'prefix %', keyClass:'aqua', desc:'Default binding: split pane vertically. (You\'ve unbound this — use <code>prefix v</code> instead.)'},
+{app:'tmux', group:'Panes', key:'prefix "', keyClass:'aqua', desc:'Default binding: split pane horizontally. (You\'ve unbound this — use <code>prefix s</code> instead.)'},
+{app:'tmux', group:'Panes', key:'prefix o', keyClass:'aqua', desc:'Cycle focus to the next pane.'},
+{app:'tmux', group:'Panes', key:'prefix ;', keyClass:'aqua', desc:'Toggle focus to the last active pane.'},
+{app:'tmux', group:'Panes', key:'prefix z', keyClass:'aqua', desc:'Zoom the active pane to fill the whole window; press again to restore.'},
+{app:'tmux', group:'Panes', key:'prefix {  /  }', keyClass:'aqua', desc:'Swap the active pane with the previous / next one.'},
+{app:'tmux', group:'Panes', key:'prefix !', keyClass:'aqua', desc:'Break the active pane out into its own window.'},
+{app:'tmux', group:'Panes', key:'prefix x', keyClass:'aqua', desc:'Kill the active pane, with confirmation (you\'ve bound plain <code>q</code> to kill without asking).'},
+{app:'tmux', group:'Panes', key:'prefix q (hold)', keyClass:'aqua', desc:'Briefly show pane numbers overlaid — press the number to jump there.'},
+{app:'tmux', group:'Panes', key:'prefix ctrl+arrow', keyClass:'aqua', desc:'Resize the active pane one cell at a time in that direction.'},
+{app:'tmux', group:'Panes', key:'prefix space', keyClass:'aqua', desc:'Cycle through the built-in pane layouts (even-horizontal, main-vertical, etc).'},
 
-  // ── ZSH: clipboard ───────────────────────────
-  {app:'zsh', group:'Clipboard', key:'copy', keyClass:'purple', desc:'Alias for <span class="hl">wl-copy</span> — pipe anything in to send it to the Wayland clipboard.'},
-  {app:'zsh', group:'Clipboard', key:'paste', keyClass:'purple', desc:'Alias for <span class="hl">wl-paste</span> — print the current clipboard contents.'},
+// TMUX — copy mode / buffers
+{app:'tmux', group:'Copy mode & buffers', key:'prefix [', keyClass:'purple', desc:'Enter copy mode manually (you\'ve also bound plain <code>Enter</code> to this).'},
+{app:'tmux', group:'Copy mode & buffers', key:'prefix ]', keyClass:'purple', desc:'Paste the most recently copied buffer.'},
+{app:'tmux', group:'Copy mode & buffers', key:'g  /  G', keyClass:'purple', desc:'Inside copy mode: jump to the top / bottom of the scrollback.'},
+{app:'tmux', group:'Copy mode & buffers', key:'/  ?', keyClass:'purple', desc:'Inside copy mode: search forward / backward for text.'},
+{app:'tmux', group:'Copy mode & buffers', key:'n  /  N', keyClass:'purple', desc:'Inside copy mode: jump to next / previous search match.'},
+{app:'tmux', group:'Copy mode & buffers', key:'w  /  b', keyClass:'purple', desc:'Inside copy mode: jump forward / backward by word (vim motions apply).'},
+{app:'tmux', group:'Copy mode & buffers', key:'ctrl+u  /  ctrl+d', keyClass:'purple', desc:'Inside copy mode: scroll up / down half a page.'},
+{app:'tmux', group:'Copy mode & buffers', key:'tmux list-buffers', keyClass:'purple', desc:'List all copy buffers currently stored.'},
+{app:'tmux', group:'Copy mode & buffers', key:'tmux show-buffer', keyClass:'purple', desc:'Print the contents of the most recent buffer.'},
+{app:'tmux', group:'Copy mode & buffers', key:'tmux choose-buffer', keyClass:'purple', desc:'Interactively pick which stored buffer to paste.'},
 
-  // ── ZSH: aliases ─────────────────────────────
-  {app:'zsh', group:'Aliases', key:'ll', keyClass:'', desc:'ls -lah — long listing, human-readable sizes, includes hidden files.'},
-  {app:'zsh', group:'Aliases', key:'..  /  ...', keyClass:'', desc:'cd .. / cd ../.. — quick directory-up shortcuts.'},
-  {app:'zsh', group:'Aliases', key:'vi / vim', keyClass:'', desc:'Both aliased to nvim.'},
-  {app:'zsh', group:'Aliases', key:'cls', keyClass:'', desc:'Alias for clear.'},
-  {app:'zsh', group:'Aliases', key:'y', keyClass:'', desc:'Launches yazi, then cd\'s your shell into whatever directory you exited it in.'},
-  {app:'zsh', group:'Aliases', key:'man &lt;cmd&gt;', keyClass:'', desc:'Opens man pages inside Neovim (MANPAGER is set to "nvim +Man!").'},
+// TMUX — misc / commands
+{app:'tmux', group:'Misc commands', key:'tmux source-file ~/.tmux.conf', keyClass:'orange', desc:'Reload config from outside tmux (you\'ve bound <code>prefix r</code> to do this from inside).'},
+{app:'tmux', group:'Misc commands', key:'prefix :', keyClass:'orange', desc:'Open the tmux command prompt to type any command directly, e.g. <code>set -g mouse off</code>.'},
+{app:'tmux', group:'Misc commands', key:'prefix t', keyClass:'orange', desc:'Show a big clock in the active pane.'},
+{app:'tmux', group:'Misc commands', key:'prefix ?', keyClass:'orange', desc:'List every current keybinding tmux knows about.'},
+{app:'tmux', group:'Misc commands', key:'prefix i', keyClass:'orange', desc:'Show information about the current window in a popup.'},
+{app:'tmux', group:'Misc commands', key:'tmux info', keyClass:'orange', desc:'Print a large diagnostic dump of the running tmux server.'},
 
-  // ── TMUX: core ──────────────────────────────
-  {app:'tmux', group:'Core', key:'ctrl+space', keyClass:'blue', desc:'Your prefix key — press before every binding below unless noted otherwise.'},
-  {app:'tmux', group:'Core', key:'prefix r', keyClass:'blue', desc:'Reload ~/.tmux.conf without restarting the session.'},
-  {app:'tmux', group:'Core', key:'mouse', keyClass:'blue', desc:'Mouse mode is on — click to select panes, drag to resize, scroll to view history.'},
+// ═══════════════════════════════════════════════════════════════
+// TMUX — your custom binds (.tmux.conf)
+// ═══════════════════════════════════════════════════════════════
+{app:'tmux', group:'Your custom binds (.tmux.conf)', key:'ctrl+space', keyClass:'yellow', desc:'Your prefix key (default tmux uses <code>ctrl+b</code> — you\'ve remapped it).'},
+{app:'tmux', group:'Your custom binds (.tmux.conf)', key:'prefix r', keyClass:'yellow', desc:'Reload ~/.tmux.conf without restarting the session.'},
+{app:'tmux', group:'Your custom binds (.tmux.conf)', key:'prefix v', keyClass:'yellow', desc:'Split the pane vertically (side by side), staying in the current directory.'},
+{app:'tmux', group:'Your custom binds (.tmux.conf)', key:'prefix s', keyClass:'yellow', desc:'Split the pane horizontally (stacked), staying in the current directory.'},
+{app:'tmux', group:'Your custom binds (.tmux.conf)', key:'prefix h j k l', keyClass:'yellow', desc:'Move focus between panes, vim-style directions.'},
+{app:'tmux', group:'Your custom binds (.tmux.conf)', key:'prefix H J K L', keyClass:'yellow', desc:'Resize the active pane in that direction by 5 cells (repeatable).'},
+{app:'tmux', group:'Your custom binds (.tmux.conf)', key:'prefix 1-5', keyClass:'yellow', desc:'Jump directly to window 1 through 5.'},
+{app:'tmux', group:'Your custom binds (.tmux.conf)', key:'prefix Tab', keyClass:'yellow', desc:'Toggle back to the previously active window.'},
+{app:'tmux', group:'Your custom binds (.tmux.conf)', key:'prefix q  /  Q', keyClass:'yellow', desc:'Kill the current pane / kill the current window (no confirmation).'},
+{app:'tmux', group:'Your custom binds (.tmux.conf)', key:'prefix d', keyClass:'yellow', desc:'Detach from the session.'},
+{app:'tmux', group:'Your custom binds (.tmux.conf)', key:'prefix Enter', keyClass:'yellow', desc:'Enter copy mode.'},
+{app:'tmux', group:'Your custom binds (.tmux.conf)', key:'v  /  V  /  ctrl+v', keyClass:'yellow', desc:'Inside copy mode: char-wise / line-wise / rectangle selection.'},
+{app:'tmux', group:'Your custom binds (.tmux.conf)', key:'y  /  Enter', keyClass:'yellow', desc:'Inside copy mode: copy selection to the Wayland clipboard via wl-copy.'},
+{app:'tmux', group:'Your custom binds (.tmux.conf)', key:'prefix p', keyClass:'yellow', desc:'Paste from the Wayland clipboard.'},
+{app:'tmux', group:'Your custom binds (.tmux.conf)', key:'prefix S  /  R', keyClass:'yellow', desc:'tmux-resurrect: manually save / restore the session layout.'},
+{app:'tmux', group:'Your custom binds (.tmux.conf)', key:'auto-save', keyClass:'yellow', desc:'tmux-continuum saves your session every 15 minutes and restores it on tmux start.'},
+{app:'tmux', group:'Your custom binds (.tmux.conf)', key:'prefix I', keyClass:'yellow', desc:'TPM: install any plugins listed in .tmux.conf that aren\'t installed yet.'},
 
-  // ── TMUX: splits & windows ──────────────────
-  {app:'tmux', group:'Splits & windows', key:'prefix v', keyClass:'green', desc:'Split the pane vertically (side by side), staying in the current directory.'},
-  {app:'tmux', group:'Splits & windows', key:'prefix s', keyClass:'green', desc:'Split the pane horizontally (stacked), staying in the current directory.'},
-  {app:'tmux', group:'Splits & windows', key:'prefix 1-5', keyClass:'green', desc:'Jump directly to window 1 through 5.'},
-  {app:'tmux', group:'Splits & windows', key:'prefix Tab', keyClass:'green', desc:'Toggle back to the previously active window.'},
+// ═══════════════════════════════════════════════════════════════
+// SHELL — your aliases & functions (.zshrc)
+// ═══════════════════════════════════════════════════════════════
+{app:'shell', group:'Your aliases & functions (.zshrc)', key:'ls', keyClass:'yellow', desc:'ls --color=auto — colorized listing.'},
+{app:'shell', group:'Your aliases & functions (.zshrc)', key:'ll', keyClass:'yellow', desc:'ls -lah --color=auto — long listing, human-readable sizes, includes hidden files.'},
+{app:'shell', group:'Your aliases & functions (.zshrc)', key:'grep', keyClass:'yellow', desc:'grep --color=auto — colorized matches.'},
+{app:'shell', group:'Your aliases & functions (.zshrc)', key:'..  /  ...', keyClass:'yellow', desc:'cd .. / cd ../.. — quick directory-up shortcuts.'},
+{app:'shell', group:'Your aliases & functions (.zshrc)', key:'vi  /  vim', keyClass:'yellow', desc:'Both aliased to nvim.'},
+{app:'shell', group:'Your aliases & functions (.zshrc)', key:'cls', keyClass:'yellow', desc:'Alias for clear.'},
+{app:'shell', group:'Your aliases & functions (.zshrc)', key:'copy  /  paste', keyClass:'yellow', desc:'wl-copy / wl-paste (falls back to xclip if wl-copy isn\'t found) — pipe into <code>copy</code>, or run <code>paste</code> to print clipboard contents.'},
+{app:'shell', group:'Your aliases & functions (.zshrc)', key:'y', keyClass:'yellow', desc:'Custom function: launches yazi, then cd\'s your shell into whatever directory you exited it in.'},
+{app:'shell', group:'Your aliases & functions (.zshrc)', key:'man cmd', keyClass:'yellow', desc:'Opens man pages inside Neovim — MANPAGER is set to "nvim +Man!".'},
+{app:'shell', group:'Your aliases & functions (.zshrc)', key:'ctrl+r', keyClass:'yellow', desc:'fzf: fuzzy-search shell history (Gruvbox-themed via FZF_DEFAULT_OPTS).'},
+{app:'shell', group:'Your aliases & functions (.zshrc)', key:'ctrl+t', keyClass:'yellow', desc:'fzf: fuzzy-find a file and insert its path at the cursor.'},
+{app:'shell', group:'Your aliases & functions (.zshrc)', key:'alt+c', keyClass:'yellow', desc:'fzf: fuzzy-find a directory and cd into it.'},
+{app:'shell', group:'Your aliases & functions (.zshrc)', key:'v  (normal mode)', keyClass:'yellow', desc:'In zsh vim-mode normal mode: opens the current command line in Neovim to edit before running.'},
+{app:'shell', group:'Your aliases & functions (.zshrc)', key:'Esc', keyClass:'yellow', desc:'Drop from insert into normal mode on the command line — shows a red [N] in your prompt.'},
 
-  // ── TMUX: pane nav/resize ────────────────────
-  {app:'tmux', group:'Pane navigation', key:'prefix h j k l', keyClass:'aqua', desc:'Move focus between panes, vim-style directions.'},
-  {app:'tmux', group:'Pane navigation', key:'prefix H J K L', keyClass:'aqua', desc:'Resize the active pane in that direction by 5 cells. Repeatable — hold prefix and tap the key again.'},
+// ═══════════════════════════════════════════════════════════════
+// SHELL — navigation & files
+// ═══════════════════════════════════════════════════════════════
+{app:'shell', group:'Navigation & files', key:'cd path', keyClass:'green', desc:'Change directory. <code>cd -</code> jumps back to the previous directory.'},
+{app:'shell', group:'Navigation & files', key:'pwd', keyClass:'green', desc:'Print the current working directory.'},
+{app:'shell', group:'Navigation & files', key:'ls -la', keyClass:'green', desc:'List all files including hidden ones, in long format.'},
+{app:'shell', group:'Navigation & files', key:'mkdir -p a/b/c', keyClass:'green', desc:'Create nested directories in one shot, no error if they already exist.'},
+{app:'shell', group:'Navigation & files', key:'rm -rf dir', keyClass:'green', desc:'Force-delete a directory and its contents recursively. <span class="hl">No confirmation — be careful.</span>'},
+{app:'shell', group:'Navigation & files', key:'cp -r src dest', keyClass:'green', desc:'Copy a directory recursively.'},
+{app:'shell', group:'Navigation & files', key:'mv src dest', keyClass:'green', desc:'Move or rename a file or directory.'},
+{app:'shell', group:'Navigation & files', key:'touch file', keyClass:'green', desc:'Create an empty file, or update its modified timestamp if it exists.'},
+{app:'shell', group:'Navigation & files', key:'ln -s target link', keyClass:'green', desc:'Create a symbolic link pointing at <span class="hl">target</span>.'},
+{app:'shell', group:'Navigation & files', key:'find . -name "*.c"', keyClass:'green', desc:'Recursively search for files matching a pattern from the current directory.'},
+{app:'shell', group:'Navigation & files', key:'tree -L 2', keyClass:'green', desc:'Show a visual directory tree, limited to 2 levels deep.'},
 
-  // ── TMUX: kill/detach ────────────────────────
-  {app:'tmux', group:'Kill & detach', key:'prefix q', keyClass:'red', desc:'Kill the current pane.'},
-  {app:'tmux', group:'Kill & detach', key:'prefix Q', keyClass:'red', desc:'Kill the current window.'},
-  {app:'tmux', group:'Kill & detach', key:'prefix d', keyClass:'red', desc:'Detach from the session, leaving it running in the background.'},
+// SHELL — permissions
+{app:'shell', group:'Permissions & ownership', key:'chmod +x file', keyClass:'red', desc:'Make a file executable.'},
+{app:'shell', group:'Permissions & ownership', key:'chmod 644 file', keyClass:'red', desc:'Set explicit permission bits (owner rw, group r, others r).'},
+{app:'shell', group:'Permissions & ownership', key:'chown user:group file', keyClass:'red', desc:'Change the owner and group of a file.'},
+{app:'shell', group:'Permissions & ownership', key:'sudo cmd', keyClass:'red', desc:'Run a single command with root privileges.'},
+{app:'shell', group:'Permissions & ownership', key:'su -', keyClass:'red', desc:'Switch to the root user shell entirely.'},
 
-  // ── TMUX: copy mode ──────────────────────────
-  {app:'tmux', group:'Copy mode (vi)', key:'prefix Enter', keyClass:'purple', desc:'Enter copy mode to scroll and select text.'},
-  {app:'tmux', group:'Copy mode (vi)', key:'v', keyClass:'purple', desc:'Inside copy mode: begin a character-wise visual selection.'},
-  {app:'tmux', group:'Copy mode (vi)', key:'V', keyClass:'purple', desc:'Inside copy mode: begin a line-wise visual selection.'},
-  {app:'tmux', group:'Copy mode (vi)', key:'ctrl+v', keyClass:'purple', desc:'Inside copy mode: toggle rectangular (block) selection.'},
-  {app:'tmux', group:'Copy mode (vi)', key:'y / Enter', keyClass:'purple', desc:'Copy the selection to the Wayland clipboard via wl-copy and exit copy mode.'},
-  {app:'tmux', group:'Copy mode (vi)', key:'Esc', keyClass:'purple', desc:'Cancel copy mode without copying.'},
-  {app:'tmux', group:'Copy mode (vi)', key:'prefix p', keyClass:'purple', desc:'Paste from the Wayland clipboard into the active pane.'},
+// SHELL — viewing & editing
+{app:'shell', group:'Viewing & editing', key:'cat file', keyClass:'aqua', desc:'Print the full contents of a file to the terminal.'},
+{app:'shell', group:'Viewing & editing', key:'less file', keyClass:'aqua', desc:'Page through a file\'s contents — <code>/</code> to search, <code>q</code> to quit.'},
+{app:'shell', group:'Viewing & editing', key:'head -n 20 file', keyClass:'aqua', desc:'Print the first 20 lines of a file.'},
+{app:'shell', group:'Viewing & editing', key:'tail -f file', keyClass:'aqua', desc:'Print the last lines of a file and keep streaming new lines as they\'re written — great for logs.'},
+{app:'shell', group:'Viewing & editing', key:'nvim file', keyClass:'aqua', desc:'Open a file in Neovim (aliased from both <code>vi</code> and <code>vim</code> in your config).'},
+{app:'shell', group:'Viewing & editing', key:'diff file1 file2', keyClass:'aqua', desc:'Show line-by-line differences between two files.'},
+{app:'shell', group:'Viewing & editing', key:'wc -l file', keyClass:'aqua', desc:'Count the number of lines in a file.'},
 
-  // ── TMUX: plugins ────────────────────────────
-  {app:'tmux', group:'Plugins (TPM)', key:'prefix I', keyClass:'yellow', desc:'Install any plugins listed in .tmux.conf that aren\'t installed yet.'},
-  {app:'tmux', group:'Plugins (TPM)', key:'prefix S', keyClass:'yellow', desc:'tmux-resurrect: manually save the current session layout.'},
-  {app:'tmux', group:'Plugins (TPM)', key:'prefix R', keyClass:'yellow', desc:'tmux-resurrect: manually restore the last saved layout.'},
-  {app:'tmux', group:'Plugins (TPM)', key:'auto-save', keyClass:'yellow', desc:'tmux-continuum saves your session every 15 minutes and restores it on tmux start.'},
+// SHELL — process management
+{app:'shell', group:'Process management', key:'ps aux', keyClass:'orange', desc:'List every running process on the system with detailed info.'},
+{app:'shell', group:'Process management', key:'top  /  htop', keyClass:'orange', desc:'Live, interactive view of running processes and resource usage.'},
+{app:'shell', group:'Process management', key:'kill pid', keyClass:'orange', desc:'Politely ask a process to terminate by its process ID.'},
+{app:'shell', group:'Process management', key:'kill -9 pid', keyClass:'orange', desc:'Force-kill a process immediately, no cleanup.'},
+{app:'shell', group:'Process management', key:'pkill name', keyClass:'orange', desc:'Kill a process by matching its name instead of its PID.'},
+{app:'shell', group:'Process management', key:'jobs', keyClass:'orange', desc:'List background/suspended jobs in the current shell.'},
+{app:'shell', group:'Process management', key:'ctrl+z', keyClass:'orange', desc:'Suspend the current foreground process.'},
+{app:'shell', group:'Process management', key:'bg  /  fg', keyClass:'orange', desc:'Resume a suspended job in the background / foreground.'},
+{app:'shell', group:'Process management', key:'cmd &', keyClass:'orange', desc:'Run a command in the background immediately.'},
+{app:'shell', group:'Process management', key:'nohup cmd &', keyClass:'orange', desc:'Run a command immune to hangups, so it keeps running after you log out.'},
+
+// SHELL — search & text processing
+{app:'shell', group:'Search & text processing', key:'grep -rn "text" .', keyClass:'purple', desc:'Recursively search files for a string, printing matching line numbers.'},
+{app:'shell', group:'Search & text processing', key:'grep -i', keyClass:'purple', desc:'Case-insensitive match — combine with other grep flags.'},
+{app:'shell', group:'Search & text processing', key:'sed \'s/old/new/g\' file', keyClass:'purple', desc:'Stream-edit a file, replacing every occurrence of <span class="hl">old</span> with <span class="hl">new</span>.'},
+{app:'shell', group:'Search & text processing', key:'awk \'{print $1}\' file', keyClass:'purple', desc:'Print the first whitespace-separated column of every line.'},
+{app:'shell', group:'Search & text processing', key:'sort  /  sort -r', keyClass:'purple', desc:'Sort lines alphabetically / in reverse.'},
+{app:'shell', group:'Search & text processing', key:'uniq -c', keyClass:'purple', desc:'Collapse adjacent duplicate lines, prefixing each with a count.'},
+{app:'shell', group:'Search & text processing', key:'cmd1 | cmd2', keyClass:'purple', desc:'Pipe the output of one command into the input of another.'},
+{app:'shell', group:'Search & text processing', key:'xargs', keyClass:'purple', desc:'Take piped input and use it as arguments for another command.'},
+
+// SHELL — archives & compression
+{app:'shell', group:'Archives & compression', key:'tar -czf out.tar.gz dir/', keyClass:'blue', desc:'Create a gzip-compressed tarball of a directory.'},
+{app:'shell', group:'Archives & compression', key:'tar -xzf file.tar.gz', keyClass:'blue', desc:'Extract a gzip-compressed tarball.'},
+{app:'shell', group:'Archives & compression', key:'zip -r out.zip dir/', keyClass:'blue', desc:'Create a zip archive of a directory.'},
+{app:'shell', group:'Archives & compression', key:'unzip file.zip', keyClass:'blue', desc:'Extract a zip archive.'},
+
+// SHELL — package management (Arch)
+{app:'shell', group:'Package management (pacman)', key:'sudo pacman -Syu', keyClass:'yellow', desc:'Sync repositories and upgrade every installed package.'},
+{app:'shell', group:'Package management (pacman)', key:'sudo pacman -S pkg', keyClass:'yellow', desc:'Install a package from the official repos.'},
+{app:'shell', group:'Package management (pacman)', key:'sudo pacman -R pkg', keyClass:'yellow', desc:'Remove a package, keeping its dependencies installed.'},
+{app:'shell', group:'Package management (pacman)', key:'sudo pacman -Rns pkg', keyClass:'yellow', desc:'Remove a package along with its unused dependencies and config files.'},
+{app:'shell', group:'Package management (pacman)', key:'pacman -Ss name', keyClass:'yellow', desc:'Search the official repos for a package by name.'},
+{app:'shell', group:'Package management (pacman)', key:'pacman -Qi pkg', keyClass:'yellow', desc:'Show detailed info about an installed package.'},
+{app:'shell', group:'Package management (pacman)', key:'yay -S pkg', keyClass:'yellow', desc:'Install a package from the AUR (if you use an AUR helper like yay).'},
+
+// SHELL — networking
+{app:'shell', group:'Networking', key:'ping host', keyClass:'blue', desc:'Check connectivity and latency to a host.'},
+{app:'shell', group:'Networking', key:'curl url', keyClass:'blue', desc:'Fetch a URL and print the response body to the terminal.'},
+{app:'shell', group:'Networking', key:'curl -O url', keyClass:'blue', desc:'Download a file from a URL, saving it with its original name.'},
+{app:'shell', group:'Networking', key:'wget url', keyClass:'blue', desc:'Download a file from a URL directly to disk.'},
+{app:'shell', group:'Networking', key:'ssh user@host', keyClass:'blue', desc:'Open a secure shell session on a remote machine.'},
+{app:'shell', group:'Networking', key:'scp file user@host:path', keyClass:'blue', desc:'Copy a file to a remote machine over SSH.'},
+{app:'shell', group:'Networking', key:'ip a', keyClass:'blue', desc:'Show network interfaces and their assigned IP addresses.'},
+
+// SHELL — system info
+{app:'shell', group:'System info', key:'df -h', keyClass:'aqua', desc:'Show disk space usage per mounted filesystem, human-readable.'},
+{app:'shell', group:'System info', key:'du -sh dir', keyClass:'aqua', desc:'Show the total size of a directory, human-readable.'},
+{app:'shell', group:'System info', key:'free -h', keyClass:'aqua', desc:'Show RAM and swap usage, human-readable.'},
+{app:'shell', group:'System info', key:'uname -a', keyClass:'aqua', desc:'Print kernel name, version, and architecture.'},
+{app:'shell', group:'System info', key:'whoami', keyClass:'aqua', desc:'Print the current logged-in username.'},
+{app:'shell', group:'System info', key:'uptime', keyClass:'aqua', desc:'Show how long the system has been running and current load.'},
+{app:'shell', group:'System info', key:'journalctl -xe', keyClass:'aqua', desc:'View recent systemd logs, useful for debugging service failures.'},
+{app:'shell', group:'System info', key:'systemctl status svc', keyClass:'aqua', desc:'Check whether a systemd service is running.'},
+
+// SHELL — git essentials
+{app:'shell', group:'Git essentials', key:'git status', keyClass:'orange', desc:'Show which files are staged, unstaged, or untracked.'},
+{app:'shell', group:'Git essentials', key:'git add .', keyClass:'orange', desc:'Stage all changes in the current directory for the next commit.'},
+{app:'shell', group:'Git essentials', key:'git commit -m "msg"', keyClass:'orange', desc:'Commit staged changes with a message.'},
+{app:'shell', group:'Git essentials', key:'git push  /  pull', keyClass:'orange', desc:'Push local commits to / pull remote commits from the tracked branch.'},
+{app:'shell', group:'Git essentials', key:'git checkout -b branch', keyClass:'orange', desc:'Create and switch to a new branch.'},
+{app:'shell', group:'Git essentials', key:'git log --oneline', keyClass:'orange', desc:'Show a condensed, one-line-per-commit history.'},
+{app:'shell', group:'Git essentials', key:'git diff', keyClass:'orange', desc:'Show unstaged changes line by line.'},
+{app:'shell', group:'Git essentials', key:'git stash', keyClass:'orange', desc:'Temporarily shelve uncommitted changes so you can switch context.'},
 ];
+
+const APP_LABELS = { tmux: 'tmux', shell: 'shell / terminal' };
+const APP_ICONS = { tmux: '▤', shell: '❯_' };
 
 const $ = sel => document.querySelector(sel);
 const searchInput = $('#search');
@@ -239,6 +388,7 @@ const resultsEl = $('#results');
 const resultCountEl = $('#resultCount');
 const totalCountEl = $('#totalCount');
 const tabs = document.querySelectorAll('.tab');
+const sidebarEl = $('#sidebar');
 
 let activeTab = 'all';
 totalCountEl.textContent = DATA.length;
@@ -254,6 +404,8 @@ function fuzzyMatch(query, text){
   return qi === query.length;
 }
 
+function slug(s){ return s.toLowerCase().replace(/[^a-z0-9]+/g,'-'); }
+
 function render(){
   const q = searchInput.value.trim();
   const filtered = DATA.filter(item=>{
@@ -266,32 +418,47 @@ function render(){
 
   if(filtered.length === 0){
     resultsEl.innerHTML = `<div class="empty"><span class="arrow">✗</span> no matches — try a shorter query</div>`;
+    sidebarEl.innerHTML = '';
     return;
   }
 
-  // group by 'group' label in original order
-  const groups = [];
-  const seen = new Set();
+  // group by app then by group, preserving first-seen order
+  const apps = [];
   filtered.forEach(item=>{
-    const groupKey = item.app + '::' + item.group;
-    if(!seen.has(groupKey)){
-      seen.add(groupKey);
-      groups.push({key: groupKey, app: item.app, label: item.group, items: []});
-    }
-    groups.find(g=>g.key===groupKey).items.push(item);
+    let a = apps.find(a=>a.key===item.app);
+    if(!a){ a = {key:item.app, groups:[]}; apps.push(a); }
+    let g = a.groups.find(g=>g.label===item.group);
+    if(!g){ g = {label:item.group, items:[]}; a.groups.push(g); }
+    g.items.push(item);
+  });
+  // pin "your" custom sections to the top of each app
+  apps.forEach(a=>{
+    a.groups.sort((x,y)=> (y.label.includes('Your') ? 1 : 0) - (x.label.includes('Your') ? 1 : 0));
   });
 
-  resultsEl.innerHTML = groups.map(g => `
-    <div class="section-label">${g.app} · ${g.label}</div>
-    <div class="grid">
-      ${g.items.map(item => `
-        <div class="card">
-          <span class="key ${item.keyClass}">${item.key}</span>
-          <span class="desc">${item.desc}</span>
-          <span class="tag">${item.app}</span>
-        </div>
-      `).join('')}
-    </div>
+
+  resultsEl.innerHTML = apps.map(a => `
+    <div class="app-header"><span class="app-icon">${APP_ICONS[a.key]}</span><h2>${APP_LABELS[a.key]}</h2><div class="line"></div></div>
+    ${a.groups.map(g => `
+      <div class="section-label" id="sec-${slug(a.key+'-'+g.label)}">${g.label}</div>
+      <div class="grid">
+        ${g.items.map(item => `
+          <div class="card">
+            <span class="key ${item.keyClass}">${item.key}</span>
+            <span class="desc">${item.desc}</span>
+          </div>
+        `).join('')}
+      </div>
+    `).join('')}
+  `).join('');
+
+  buildSidebar(apps);
+}
+
+function buildSidebar(apps){
+  sidebarEl.innerHTML = apps.map(a => `
+    <div class="side-title">${APP_ICONS[a.key]} ${APP_LABELS[a.key]}</div>
+    ${a.groups.map(g => `<a href="#sec-${slug(a.key+'-'+g.label)}">${g.label}</a>`).join('')}
   `).join('');
 }
 
