@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Build the HTML card structure
     const cardHtml = `
-        <div class="project-card reveal" style="transition-delay: ${index * 0.1}s;">
+        <div class="project-card" style="transition-delay: ${index * 0.1}s;">
             <div class="project-lang">${lang}</div>
             <div class="project-name">${repo.name}</div>
             <p class="project-desc">
