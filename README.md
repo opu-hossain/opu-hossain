@@ -36,10 +36,16 @@ I am a first-year **B.Sc. Computer Science and Engineering** student based in Ba
 
 <div align="center">
   <a href="https://github.com/opu-hossain/logbook">
-    <img src="https://github-readme-stats-fast.vercel.app/api/pin/?username=opu-hossain&repo=logbook&theme=gruvbox&bg_color=1d2021&title_color=d79921&text_color=ebdbb2&icon_color=d65d0e&hide_border=true" width="48%" />
+    <img src="https://github-readme-stats-fast.vercel.app/api/pin/?username=opu-hossain&repo=ergon&theme=gruvbox&bg_color=1d2021&title_color=d79921&text_color=ebdbb2&icon_color=d65d0e&hide_border=true" width="48%" />
   </a>
   <a href="https://github.com/opu-hossain/truthbyte">
     <img src="https://github-readme-stats-fast.vercel.app/api/pin/?username=opu-hossain&repo=truthbyte&theme=gruvbox&bg_color=1d2021&title_color=d79921&text_color=ebdbb2&icon_color=d65d0e&hide_border=true" width="48%" />
+  </a>
+  <a href="https://github.com/opu-hossain/truthbyte">
+    <img src="https://github-readme-stats-fast.vercel.app/api/pin/?username=opu-hossain&repo=logbook&theme=gruvbox&bg_color=1d2021&title_color=d79921&text_color=ebdbb2&icon_color=d65d0e&hide_border=true" width="48%" />
+  </a>
+  <a href="https://github.com/opu-hossain/truthbyte">
+    <img src="https://github-readme-stats-fast.vercel.app/api/pin/?username=opu-hossain&repo=tasktracker-cli&theme=gruvbox&bg_color=1d2021&title_color=d79921&text_color=ebdbb2&icon_color=d65d0e&hide_border=true" width="48%" />
   </a>
 </div>
 
