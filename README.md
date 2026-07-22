@@ -63,7 +63,9 @@ I am a first-year **B.Sc. Computer Science and Engineering** student based in Ba
 ### Activity Graph
 
 <div align="center">
-  [![Activity Graph](https://github-readme-activity-graph.vercel.app/graph?username=opu-hossain&bg_color=1d2021&color=d79921&line=d65d0e&point=ebdbb2&area=true&area_color=d7992155&hide_border=true)](https://github.com/ashutosh00710/github-readme-activity-graph)
+  <a href="https://github.com/ashutosh00710/github-readme-activity-graph">
+    <img src="https://github-readme-activity-graph.vercel.app/graph?username=opu-hossain&bg_color=1d2021&color=d79921&line=d65d0e&point=ebdbb2&area=true&area_color=d7992155&hide_border=true" alt="Activity Graph" />
+  </a>
 </div>
 
 ---
