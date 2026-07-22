@@ -1,21 +1,49 @@
 document.addEventListener("DOMContentLoaded", async () => {
   const grid = document.getElementById("projects-grid");
-  const githubUsername = "opu-hossain";
-
-  try {
-    // Fetch repositories from GitHub API (sorted by most recently updated)
-    const response = await fetch(
-      `https://api.github.com/users/${githubUsername}/repos?sort=updated&per_page=15`,
-    );
-
-    if (!response.ok) throw new Error("Failed to fetch data");
-
-    const repos = await response.json();
-
-    // Filter out forks and grab the top 6
-    const featuredRepos = repos.filter((repo) => !repo.fork).slice(0, 6);
-
+//  const githubUsername = "opu-hossain";
+//
+//  try {
+//    // Fetch repositories from GitHub API (sorted by most recently updated)
+//    const response = await fetch(
+//      `https://api.github.com/users/${githubUsername}/repos?sort=updated&per_page=15`,
+//    );
+//
+//    if (!response.ok) throw new Error("Failed to fetch data");
+//
+//    const repos = await response.json();
+//
+//    // Filter out forks and grab the top 6
+//    const featuredRepos = repos.filter((repo) => !repo.fork).slice(0, 6);
+//
     // Clear the "Loading..." text
+
+    // Tmporary mock data
+    const featuredRepos = [
+        {
+            name: "Ergon",
+            language: "C",
+            description: "Ergon - an energetic language",
+            topics: ["interpreter"],
+            stargazers_count: 1,
+            html_url: "https://github.com/opu-hossain/ergon"
+        },
+        {
+            name: "TruthByte",
+            language: "C",
+            description: "CLI file integrity verification tool. Supports SHA256, SHA512, SHA1 & MD5.",
+            topics: ["cli", "linux", "security"],
+            stargazers_count: 2,
+            html_url: "https://github.com/opu-hossain/truthbyte"
+        },
+        {
+            name: "LogBook",
+            language: "Python",
+            description: "A docs renderer",
+            topics: ["github"],
+            stargazers_count: 3,
+            html_url: "https://github.com/opu-hossain/logbook"
+        }
+    ];
     grid.innerHTML = "";
 
     featuredRepos.forEach((repo, index) => {
