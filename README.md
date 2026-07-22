@@ -5,11 +5,6 @@
 
 <br/>
 
-<!-- Visitor Counter -->
-![Visitor Count](https://komarev.com/ghpvc/?username=opu-hossain&color=d79921&style=flat-square&label=PROFILE+VIEWS)
-
-</div>
-
 ---
 
 ### About Me
