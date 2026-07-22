@@ -22,9 +22,8 @@ I am a first-year **B.Sc. Computer Science and Engineering** student based in Ba
 
 ---
 
-### Tech Stack
+### Languages & Frameworks**  
 
-**Languages & Frameworks**  
 ![C](https://img.shields.io/badge/C-1d2021?style=for-the-badge&logo=c&logoColor=458588)
 ![Python](https://img.shields.io/badge/Python-1d2021?style=for-the-badge&logo=python&logoColor=d79921)
 ![Kotlin](https://img.shields.io/badge/Kotlin-1d2021?style=for-the-badge&logo=kotlin&logoColor=b16286)
